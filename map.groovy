@@ -14,6 +14,13 @@ def mapField(fieldArr) {
     return fields
 }
 
+def toJsonWithoutEscaping(def data) {
+    def json = JsonOutput.toJson(data)
+    return JsonOutput.prettyPrint(json).replaceAll(/\\u([0-9a-fA-F]{4})/) { match, hex ->
+        Integer.parseInt(hex, 16) as char
+    }
+}
+
 // Определение метода getSources
 def getSources(sourceArr) {
     if (!sourceArr || !sourceArr.size()) {
