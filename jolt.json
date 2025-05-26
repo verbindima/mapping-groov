@@ -1,0 +1,27 @@
+[
+  {
+    "operation": "shift",
+    "spec": {
+      // Извлекаем main_type из корня
+      "main_type": "main_type",
+      
+      // Собираем все sourceSystem из party.source[*]
+      "party": {
+        "source": {
+          "*": {
+            "sourceSystem": "sourceSystems" // Значения станут массивом
+          }
+        },
+        // Извлекаем rawId из party
+        "rawId": "rawId"
+      }
+    }
+  },
+  // Удаляем пустые массивы (если sourceSystems отсутствует)
+  {
+    "operation": "remove",
+    "spec": {
+      "sourceSystems": ""
+    }
+  }
+]
