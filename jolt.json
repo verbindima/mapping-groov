@@ -2,24 +2,33 @@
   {
     "operation": "shift",
     "spec": {
-      "*": {
-        "main_type": "[&1].main_type",
-        "party": {
-          "rawId": "[&2].rawId",
-          "source": {
-            "*": {
-              "sourceSystem": "[&3].sourceSystems[]"
-            }
+      "main_type": "main_type",
+      "party": {
+        "source": {
+          "*": {
+            "sourceSystem": "party.source[&1].sourceSystem",
+            "rawId": "party.source[&1].rawId"
           }
-        }
+        },
+        "rawId": "party.rawId"
       }
     }
   },
   {
-    "operation": "remove",
+    "operation": "shift",
     "spec": {
-      "*": {
-        "party": ""
+      "main_type": "main_type",
+      "party": "party",
+      "party": {
+        "source": {
+          "*": {
+            "sourceSystem": {
+              "IGM": {
+                "@(2,rawId)": "igmRawId"
+              }
+            }
+          }
+        }
       }
     }
   }
