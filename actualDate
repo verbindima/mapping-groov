@@ -1,0 +1,31 @@
+/**
+ * Проверяет, что текущая дата меньше входящей даты + 5 лет.
+ * @param {string} datetimeStr Дата в формате "DD.MM.YYYY hh:mm:ss"
+ * @returns {boolean}
+ */
+function isBeforePlusFiveYears(datetimeStr) {
+  // Разбиваем на дату и время
+  const [datePart, timePart] = datetimeStr.split(' ');
+  if (!datePart || !timePart) {
+    throw new Error('Неправильный формат: ожидается "DD.MM.YYYY hh:mm:ss"');
+  }
+
+  // Разбиваем дату на день, месяц, год
+  const [day, month, year] = datePart.split('.').map(Number);
+  // Разбиваем время на часы, минуты, секунды
+  const [hours, minutes, seconds] = timePart.split(':').map(Number);
+
+  // Создаём объект Date (месяцы в JS идут от 0 до 11)
+  const inputDate = new Date(year, month - 1, day, hours, minutes, seconds);
+
+  // Копируем дату и прибавляем 5 лет
+  const limitDate = new Date(inputDate);
+  limitDate.setFullYear(limitDate.getFullYear() + 5);
+
+  // Сравниваем с текущей датой
+  return Date.now() < limitDate.getTime();
+}
+
+// Примеры использования:
+console.log(isBeforePlusFiveYears("24.08.2024 09:12:12")); // true или false в зависимости от текущей даты
+console.log(isBeforePlusFiveYears("24.08.2018 00:00:00")); // скорее всего false, т.к. уже прошло >5 лет
