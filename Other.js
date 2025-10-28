@@ -50,3 +50,21 @@ const parts = splitBySize(sourceObject, 1_000_000);
 // parts — это [{customerCards:[...], ...прочие поля}, ...]
 // Отправляете каждый: JSON.stringify(parts[i])
 */
+function splitCustomerCards(data, parts = 5) {
+  if (!data || !Array.isArray(data.customerCards)) {
+    throw new Error('Нужен объект формата { customerCards: [...] }');
+  }
+  const total = data.customerCards.length;
+  const base = Math.floor(total / parts);
+  const extra = total % parts;
+
+  const res = {};
+  let offset = 0;
+
+  for (let i = 1; i <= parts; i++) {
+    const size = base + (i <= extra ? 1 : 0);
+    res[i] = { customerCards: data.customerCards.slice(offset, offset + size) };
+    offset += size;
+  }
+  return res;
+}
