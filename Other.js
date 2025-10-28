@@ -68,3 +68,91 @@ function splitCustomerCards(data, parts = 5) {
   }
   return res;
 }
+
+// Поля в точном порядке, как во втором скрине
+const FIELDS = [
+  "id",
+  "additionalInfo",
+  "phoneType",
+  "countryCode",
+  "cityCode",
+  "phoneNumber",
+  "phoneExtension",
+  "addressRegion",
+  "addressRayon",
+  "addressCity",
+  "addressSettlement"
+];
+
+/**
+ * Преобразует массив объектов (как на 1-м скрине)
+ * в тело запроса (как на 2-м скрине).
+ * @param {Array<Object>} rows
+ * @returns {Object} doBatchCleanRequest payload
+ */
+function toBatchCleanRequest(rows) {
+  if (!Array.isArray(rows)) {
+    throw new TypeError("Ожидался массив объектов с телефонами");
+  }
+
+  return {
+    doBatchCleanRequest: {
+      mapping: "clean-phone",
+      data: rows.map(row => ({
+        datafields: FIELDS.map(key => {
+          const v = row?.[key];
+          return v == null ? "" : String(v);
+        })
+      }))
+    }
+  };
+}
+
+// ===== Пример использования =====
+
+// Вход как на первом скрине (можно подставить свои данные)
+const input = [
+  {
+    id: "1",
+    additionalInfo: "-БРАТ СЕРГЕЙ",
+    phoneType: "0",
+    countryCode: "OTHER",
+    cityCode: "495",
+    phoneNumber: "3808230",
+    phoneExtension: "5516",
+    addressRegion: "",
+    addressRayon: "Москва",
+    addressCity: "",
+    addressSettlement: ""
+  },
+  {
+    id: "2",
+    additionalInfo: "В/Ч",
+    phoneType: "RELATIVE",
+    countryCode: "7",
+    cityCode: "495",
+    phoneNumber: "1050055",
+    phoneExtension: "1568",
+    addressRegion: "",
+    addressRayon: "Москва",
+    addressCity: "Люберцы",
+    addressSettlement: ""
+  },
+  {
+    id: "3",
+    additionalInfo: "TATOSHKA",
+    phoneType: "WORK",
+    countryCode: "7",
+    cityCode: "38361",
+    phoneNumber: "23829",
+    phoneExtension: "8261",
+    addressRegion: "Барабинский",
+    addressRayon: "Новосибирская область",
+    addressCity: "Барабинск",
+    addressSettlement: "Барабинск"
+  }
+];
+
+// Результат как на втором скрине
+const payload = toBatchCleanRequest(input);
+// console.log(JSON.stringify(payload, null, 2));
