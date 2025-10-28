@@ -111,3 +111,54 @@ function toBatchCleanRequest(rows) {
 // ===== Пример использования =====
 
 // Вход как на первом скрине (можно подставить свои данные)
+// Поля выходной структуры строго в порядке из второго скрина
+const OUT_FIELDS = [
+  "id",                 // 1
+  "additionalInfo",     // 2
+  "phoneType",          // 3 (enum/литера)
+  "rawSource",          // 4
+  "phoneCountryCode",   // 5
+  "phoneCityCode",      // 6
+  "phoneNumber",        // 7
+  "phoneExtension",     // 8
+  "phoneComment",       // 9
+  "qualityCode",        // 10
+  "numberProfile",      // 11
+  "operator",           // 12
+  "operatorRegion",     // 13
+  "movedNumberFlag",    // 14
+  "codeCountry",        // 15
+  "codeRegion",         // 16
+  "codeRayon",          // 17
+  "codeCity",           // 18
+  "codeSettlement",     // 19
+  "timezoneUTC",        // 20
+  "timezoneMSK",        // 21
+  "popularity"          // 22
+];
+
+/**
+ * Преобразует ответ сервиса (как на 1-м скрине)
+ * к массиву объектов по спецификации (как на 2-м).
+ * Отсутствующее значение -> пустая строка.
+ * @param {object} resp JSON с doBatchCleanResponse
+ * @returns {Array<object>}
+ */
+function mapCleanResponseToSpec(resp) {
+  const rows = resp?.doBatchCleanResponse?.data;
+  if (!Array.isArray(rows)) return [];
+
+  return rows.map(item => {
+    const src = Array.isArray(item?.datafields) ? item.datafields : [];
+    const obj = {};
+    for (let i = 0; i < OUT_FIELDS.length; i++) {
+      obj[OUT_FIELDS[i]] = src[i] == null ? "" : String(src[i]);
+    }
+    return obj;
+  });
+}
+
+
+const normalized = mapCleanResponseToSpec(response);
+// console.log(JSON.stringify(normalized, null, 2));
+*/
