@@ -1,4 +1,4 @@
-  if (!data || !Array.isArray(data.customerCards)) {
+no  if (!data || !Array.isArray(data.customerCards)) {
     throw new Error('Ожидался объект с полем customerCards: []');
   }
 
@@ -162,3 +162,35 @@ function mapCleanResponseToSpec(resp) {
 const normalized = mapCleanResponseToSpec(response);
 // console.log(JSON.stringify(normalized, null, 2));
 */
+
+const addAISToClientIDExtSystem = (data, externalSystemId) => {
+  const rawId = String(Math.floor(1000000000 + Math.random() * 9000000000));
+  
+  const now = new Date();
+  const actualityDate = now.toLocaleString('ru-RU', {
+    day: '2-digit',
+    month: '2-digit', 
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  }).replace(',', '');
+
+  const newElement = {
+    rawId: rawId,
+    type: "AIS",
+    externalSystemId: externalSystemId,
+    checked: "true",
+    actualityDate: actualityDate,
+    author: `AIS:${rawId}`
+  };
+
+  if (data.Subjects?.[0]) {
+    if (!data.Subjects[0].ClientIDExtSystem) {
+      data.Subjects[0].ClientIDExtSystem = [];
+    }
+    data.Subjects[0].ClientIDExtSystem.push(newElement);
+  }
+
+  return data;
+};
