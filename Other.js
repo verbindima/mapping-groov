@@ -163,7 +163,7 @@ const normalized = mapCleanResponseToSpec(response);
 // console.log(JSON.stringify(normalized, null, 2));
 */
 
-const addAISToClientIDExtSystem = (data, externalSystemId) => {
+const addAISToAttribute = (data, externalSystemId) => {
   const rawId = String(Math.floor(1000000000 + Math.random() * 9000000000));
   
   const now = new Date();
@@ -178,18 +178,19 @@ const addAISToClientIDExtSystem = (data, externalSystemId) => {
 
   const newElement = {
     rawId: rawId,
-    type: "AIS",
-    externalSystemId: externalSystemId,
-    checked: "true",
-    actualityDate: actualityDate,
-    author: `AIS:${rawId}`
+    type: "EXTERNAL_IDENTIFIER",
+    field: [
+      { value: "AIS", name: "type" },
+      { value: externalSystemId, name: "externalSystemId" },
+      { value: actualityDate, name: "actualityDate" },
+      { value: "true", name: "checked" },
+      { value: `AIS:${rawId}`, name: "author" }
+    ],
+    deleted: "false"
   };
 
-  if (data.Subjects?.[0]) {
-    if (!data.Subjects[0].ClientIDExtSystem) {
-      data.Subjects[0].ClientIDExtSystem = [];
-    }
-    data.Subjects[0].ClientIDExtSystem.push(newElement);
+  if (data.party?.attribute) {
+    data.party.attribute.push(newElement);
   }
 
   return data;
